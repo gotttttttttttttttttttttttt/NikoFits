@@ -38,7 +38,7 @@
             { id: 'shirt1', name: 'Classic Oxford Shirt', brand: 'Timeless', price: 250, sizes: ['S', 'M', 'L', 'XL'], image: 'images/ST1.png', description: 'Essential Oxford shirt. Versatile wardrobe staple.' },
             { id: 'shirt2', name: 'Linen Button Up', brand: 'Summer Breeze', price: 399, sizes: ['S', 'M', 'L', 'XL'], image: 'images/ST2.png', description: 'Breathable linen fabric. Perfect for hot days.' },
             { id: 'shirt3', name: 'Oversized Denim Shirt', brand: 'Street Style', price: 449, sizes: ['S', 'M', 'L'], image: 'images/ST3.png', description: 'Relaxed denim shirt. Great for layering.' },
-            { id: 'shirt4', name: 'Silk Satin Blouse', brand: 'Luxe Edit', price: 599, sizes: ['S', 'M', 'L'], image: 'images/ST6.png', description: 'Elegant silk finish. Perfect for special occasions.' },
+            { id: 'shirt4', name: 'Silk Satin Blouse', brand: 'Luxe Edit', price: 599, sizes: ['S', 'M', 'L'], image: 'images/ST4.png', description: 'Elegant silk finish. Perfect for special occasions.' },
             { id: 'shirt5', name: 'Flannel Plaid Shirt', brand: 'Cozy Style', price: 379, sizes: ['S', 'M', 'L', 'XL'], image: 'images/ST5.png', description: 'Warm flannel fabric. Classic plaid pattern.' },
             { id: 'shirt6', name: 'Cropped Button Up', brand: 'Y2K Revival', price: 329, sizes: ['S', 'M', 'L'], image: 'images/ST6.png', description: 'Trendy cropped length. Modern silhouette.' }
         ]
@@ -65,7 +65,6 @@
     const productModal = document.getElementById('productModal');
     const modalCloseBtn = document.getElementById('modalCloseBtn');
     const modalAddToCart = document.getElementById('modalAddToCart');
-    const exploreBtn = document.getElementById('exploreBtn');
 
     // Render products based on category
     function renderProducts() {
@@ -112,77 +111,69 @@
         attachProductEvents();
     }
 
-// Magazine Carousel Functionality - Add to existing js.js
+    // Magazine Carousel Functionality
+    let currentMagazineIndex = 0;
+    const magazineCards = document.querySelectorAll('.magazine-card');
+    const magazinePrev = document.getElementById('magazinePrev');
+    const magazineNext = document.getElementById('magazineNext');
 
-// Magazine Carousel Navigation
-let currentMagazineIndex = 0;
-const magazineCards = document.querySelectorAll('.magazine-card');
-const magazinePrev = document.getElementById('magazinePrev');
-const magazineNext = document.getElementById('magazineNext');
-
-function updateMagazineCarousel() {
-    if (!magazineCards.length) return;
-    
-    const cardsPerView = window.innerWidth >= 1024 ? 3 : (window.innerWidth >= 640 ? 2 : 1);
-    const maxIndex = Math.max(0, magazineCards.length - cardsPerView);
-    
-    if (currentMagazineIndex > maxIndex) currentMagazineIndex = maxIndex;
-    if (currentMagazineIndex < 0) currentMagazineIndex = 0;
-    
-    magazineCards.forEach((card, index) => {
-        if (index >= currentMagazineIndex && index < currentMagazineIndex + cardsPerView) {
-            card.style.display = 'block';
-            card.style.animation = 'fadeInUp 0.5s ease';
-        } else {
-            card.style.display = 'none';
-        }
-    });
-}
-
-if (magazinePrev && magazineNext) {
-    magazinePrev.addEventListener('click', () => {
+    function updateMagazineCarousel() {
+        if (!magazineCards.length) return;
+        
         const cardsPerView = window.innerWidth >= 1024 ? 3 : (window.innerWidth >= 640 ? 2 : 1);
-        if (currentMagazineIndex > 0) {
-            currentMagazineIndex--;
+        const maxIndex = Math.max(0, magazineCards.length - cardsPerView);
+        
+        if (currentMagazineIndex > maxIndex) currentMagazineIndex = maxIndex;
+        if (currentMagazineIndex < 0) currentMagazineIndex = 0;
+        
+        magazineCards.forEach((card, index) => {
+            if (index >= currentMagazineIndex && index < currentMagazineIndex + cardsPerView) {
+                card.style.display = 'block';
+                card.style.animation = 'fadeInUp 0.5s ease';
+            } else {
+                card.style.display = 'none';
+            }
+        });
+    }
+
+    if (magazinePrev && magazineNext) {
+        magazinePrev.addEventListener('click', () => {
+            const cardsPerView = window.innerWidth >= 1024 ? 3 : (window.innerWidth >= 640 ? 2 : 1);
+            if (currentMagazineIndex > 0) {
+                currentMagazineIndex--;
+                updateMagazineCarousel();
+            }
+        });
+        
+        magazineNext.addEventListener('click', () => {
+            const cardsPerView = window.innerWidth >= 1024 ? 3 : (window.innerWidth >= 640 ? 2 : 1);
+            if (currentMagazineIndex < magazineCards.length - cardsPerView) {
+                currentMagazineIndex++;
+                updateMagazineCarousel();
+            }
+        });
+    }
+
+    // Magazine Card Click Handler
+    document.querySelectorAll('.magazine-card, .magazine-read-more').forEach(element => {
+        element.addEventListener('click', (e) => {
+            e.preventDefault();
+            const card = element.closest('.magazine-card');
+            if (card) {
+                const title = card.querySelector('.magazine-card-title')?.textContent || 'Style Story';
+                showToast(`📖 Opening: ${title}`);
+            }
+        });
+    });
+
+    // Update carousel on window resize
+    let resizeTimeout;
+    window.addEventListener('resize', () => {
+        clearTimeout(resizeTimeout);
+        resizeTimeout = setTimeout(() => {
             updateMagazineCarousel();
-        }
+        }, 250);
     });
-    
-    magazineNext.addEventListener('click', () => {
-        const cardsPerView = window.innerWidth >= 1024 ? 3 : (window.innerWidth >= 640 ? 2 : 1);
-        if (currentMagazineIndex < magazineCards.length - cardsPerView) {
-            currentMagazineIndex++;
-            updateMagazineCarousel();
-        }
-    });
-}
-
-// Magazine Card Click Handler
-document.querySelectorAll('.magazine-card, .magazine-read-more').forEach(element => {
-    element.addEventListener('click', (e) => {
-        e.preventDefault();
-        const card = element.closest('.magazine-card');
-        if (card) {
-            const title = card.querySelector('.magazine-card-title')?.textContent || 'Style Story';
-            const desc = card.querySelector('.magazine-card-desc')?.textContent || '';
-            showToast(`📖 Opening: ${title}`);
-        }
-    });
-});
-
-// Update carousel on window resize
-let resizeTimeout;
-window.addEventListener('resize', () => {
-    clearTimeout(resizeTimeout);
-    resizeTimeout = setTimeout(() => {
-        updateMagazineCarousel();
-    }, 250);
-});
-
-// Initialize carousel
-setTimeout(() => {
-    updateMagazineCarousel();
-}, 100);
 
     function attachProductEvents() {
         document.querySelectorAll('.product-card').forEach(card => {
@@ -318,7 +309,7 @@ setTimeout(() => {
         }
     }
 
-    function showToast(message) {
+    function showToast(message, duration = 2000) {
         const toast = document.createElement('div');
         toast.textContent = message;
         toast.style.cssText = `
@@ -332,14 +323,14 @@ setTimeout(() => {
             border-radius: 50px;
             font-size: 0.9rem;
             z-index: 1001;
-            animation: fadeInOut 2s ease forwards;
+            animation: fadeInOut ${duration/1000}s ease forwards;
             pointer-events: none;
             font-family: 'Space Grotesk', sans-serif;
             white-space: nowrap;
             max-width: 90vw;
         `;
         document.body.appendChild(toast);
-        setTimeout(() => toast.remove(), 2000);
+        setTimeout(() => toast.remove(), duration);
     }
 
     function escapeHtml(str) {
@@ -378,9 +369,11 @@ setTimeout(() => {
         modalCloseBtn.addEventListener('click', () => productModal.classList.remove('active'));
     }
     
-    productModal.addEventListener('click', (e) => {
-        if (e.target === productModal) productModal.classList.remove('active');
-    });
+    if (productModal) {
+        productModal.addEventListener('click', (e) => {
+            if (e.target === productModal) productModal.classList.remove('active');
+        });
+    }
     
     if (cartIconBtn) {
         cartIconBtn.addEventListener('click', () => cartSidebar.classList.add('open'));
@@ -413,12 +406,6 @@ setTimeout(() => {
         });
     }
     
-    if (exploreBtn) {
-        exploreBtn.addEventListener('click', () => {
-            document.getElementById('catalog').scrollIntoView({ behavior: 'smooth' });
-        });
-    }
-    
     document.getElementById('newsletterForm')?.addEventListener('submit', (e) => {
         e.preventDefault();
         const email = e.target.querySelector('input').value;
@@ -426,37 +413,91 @@ setTimeout(() => {
         e.target.reset();
     });
     
-    document.querySelectorAll('.social-links a, .footer-links a').forEach(link => {
+    document.querySelectorAll('.social-icons a, .footer-links a').forEach(link => {
         link.addEventListener('click', (e) => {
             e.preventDefault();
             showToast('Coming soon! Follow us on social media for updates.');
         });
     });
 
-
+    // Initialize carousel and products
+    setTimeout(() => {
+        updateMagazineCarousel();
+    }, 100);
     
     loadCart();
     renderProducts();
 })();
 
-// ========== LOGOUT FUNCTION - SAME AS MAVI PETALS (WORKING) ==========
+// ========== LOGOUT FUNCTION - WORKING WITH FILEMAKER ==========
+// This function is placed outside the IIFE so it's globally accessible
 
 function logoutAndReturnToFileMaker() {
-    // Show a quick confirmation
-    showToast('Logging out... Redirecting to FileMaker', 2000);
+    // Show toast message
+    const toast = document.createElement('div');
+    toast.textContent = 'Logging out... Returning to FileMaker';
+    toast.style.cssText = `
+        position: fixed;
+        bottom: 100px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: #1a1a1a;
+        color: white;
+        padding: 0.8rem 1.8rem;
+        border-radius: 50px;
+        font-size: 0.9rem;
+        z-index: 1001;
+        animation: fadeInOut 2s ease forwards;
+        pointer-events: none;
+        font-family: 'Space Grotesk', sans-serif;
+        white-space: nowrap;
+        max-width: 90vw;
+    `;
+    document.body.appendChild(toast);
     
-    // Redirect to FileMaker login - USE THE SAME URL THAT WORKED BEFORE
+    // Redirect to FileMaker after a short delay
     setTimeout(function() {
+        // IMPORTANT: Replace this URL with your actual FileMaker database path
+        // Use either option:
+        
+        // Option 1: If your database is already open (recommended)
         window.location.href = 'fmp://$/ShowLogin';
-    }, 500);
+        
+        // Option 2: If you need to specify the database file
+        // window.location.href = 'fmp://127.0.0.1/Mavic.fmp12?script=ShowLogin';
+        
+        // Try to close the tab after redirect (works if opened by Open URL)
+        setTimeout(function() {
+            window.close();
+        }, 500);
+    }, 800);
 }
 
-// Attach logout event to button
-const logoutBtn = document.getElementById('logoutBtn');
-if (logoutBtn) {
-    logoutBtn.addEventListener('click', function(e) {
-        e.preventDefault();
-        logoutAndReturnToFileMaker();
-    });
-}
+// Attach logout event to button (wait for DOM to load)
+document.addEventListener('DOMContentLoaded', function() {
+    const logoutBtn = document.getElementById('logoutBtn');
+    if (logoutBtn) {
+        logoutBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            logoutAndReturnToFileMaker();
+        });
+        console.log('Logout button attached successfully');
+    } else {
+        console.log('Logout button not found - check if element exists');
+    }
+});
 
+// Also try immediately if DOM already loaded
+if (document.readyState === 'loading') {
+    // Waiting for DOMContentLoaded
+} else {
+    const logoutBtn = document.getElementById('logoutBtn');
+    if (logoutBtn && !logoutBtn.hasListener) {
+        logoutBtn.hasListener = true;
+        logoutBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            logoutAndReturnToFileMaker();
+        });
+    }
+}
