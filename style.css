@@ -1261,3 +1261,45 @@ body {
         flex-direction: column;
     }
 }
+
+/* Top Right Logout Button */
+.logout-corner-btn {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1000;
+    background: var(--primary-dark);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 50px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'Space Grotesk', sans-serif;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+.logout-corner-btn:hover {
+    background: var(--accent);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+.logout-corner-btn i {
+    font-size: 1rem;
+}
+
+/* Mobile adjustment */
+@media (max-width: 768px) {
+    .logout-corner-btn {
+        top: 10px;
+        right: 10px;
+        padding: 8px 15px;
+        font-size: 0.8rem;
+    }
+}
