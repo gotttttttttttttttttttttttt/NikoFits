@@ -439,24 +439,16 @@ setTimeout(() => {
     renderProducts();
 })();
 
-// ========== LOGOUT FUNCTION - Returns to FileMaker Login ==========
+// ========== LOGOUT FUNCTION - SAME AS MAVI PETALS (WORKING) ==========
+
 function logoutAndReturnToFileMaker() {
-    // Clear cart data if you want (optional)
-    // localStorage.removeItem('nikofits_cart');
+    // Show a quick confirmation
+    showToast('Logging out... Redirecting to FileMaker', 2000);
     
-    // Show toast message
-    showToast('Logging out... Returning to FileMaker', 1500);
-    
-    // Method 1: Try to close the tab (works if opened by FileMaker's Open URL)
+    // Redirect to FileMaker login - USE THE SAME URL THAT WORKED BEFORE
     setTimeout(function() {
-        // Try to close the browser tab
-        window.close();
-        
-        // Fallback: If close fails, redirect to FileMaker
-        setTimeout(function() {
-            window.location.href = 'fmp://$/ShowLogin';
-        }, 500);
-    }, 1000);
+        window.location.href = 'fmp://$/ShowLogin';
+    }, 500);
 }
 
 // Attach logout event to button
