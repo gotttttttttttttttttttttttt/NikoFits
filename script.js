@@ -438,3 +438,25 @@ setTimeout(() => {
     loadCart();
     renderProducts();
 })();
+
+// ========== LOGOUT FUNCTION - Redirects to FileMaker ==========
+function logoutAndReturnToFileMaker() {
+    // Show a quick confirmation message
+    showToast('Logging out... Redirecting to FileMaker', 2000);
+    
+    // Redirect to FileMaker login
+    // IMPORTANT: Replace with your actual FileMaker database path and script
+    setTimeout(function() {
+        window.location.href = 'fmp://';
+    }, 500);
+}
+
+// Attach logout event to button
+const logoutBtn = document.getElementById('logoutBtn');
+if (logoutBtn) {
+    logoutBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        logoutAndReturnToFileMaker();
+    });
+}
+
