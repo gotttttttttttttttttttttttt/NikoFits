@@ -439,22 +439,29 @@ setTimeout(() => {
     renderProducts();
 })();
 
-// ========== LOGOUT FUNCTION - Redirects to FileMaker ==========
+// ========== LOGOUT FUNCTION - Returns to FileMaker Login ==========
 function logoutAndReturnToFileMaker() {
-    // Show a quick confirmation message
+    // Show a quick confirmation
     showToast('Logging out... Redirecting to FileMaker', 2000);
     
-    // Redirect to FileMaker login
-    // IMPORTANT: Replace with your actual FileMaker database path and script
-    setTimeout(function() {
-        window.location.href = 'fmp://';
+    // Redirect to FileMaker login using currently open database
+    setTimeout(() => {
+        window.location.href = 'fmp://$/Nicole.fmp12?script=ShowLogin';
     }, 500);
 }
 
-// Attach logout event to button
+// Attach logout event to button(s)
 const logoutBtn = document.getElementById('logoutBtn');
 if (logoutBtn) {
-    logoutBtn.addEventListener('click', function(e) {
+    logoutBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        logoutAndReturnToFileMaker();
+    });
+}
+
+const logoutBtnFooter = document.getElementById('logoutBtnFooter');
+if (logoutBtnFooter) {
+    logoutBtnFooter.addEventListener('click', (e) => {
         e.preventDefault();
         logoutAndReturnToFileMaker();
     });
